@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -9,6 +9,7 @@ import {
   Card,
   Button,
   Container,
+  Form,
 } from "react-bootstrap"
 import axios from "axios"
 import Rating from "../components/Rating"
@@ -16,15 +17,20 @@ import { listProductDetails } from "../actions/productActions"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ history, match }) => {
+  const [qty, setQty] = useState(1)
+
   const dispatch = useDispatch()
   const productDetails = useSelector((state) => state.productDetails)
-
   const { loading, error, product } = productDetails
 
   useEffect(() => {
     dispatch(listProductDetails(match.params.id))
   }, [match])
+
+  const addToCartHandler = () => {
+    history.push(`/cart/${match.params.id}?qty=${qty}`)
+  }
 
   return (
     <Container>
@@ -72,8 +78,29 @@ const ProductScreen = ({ match }) => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
+                {product.countInStock > 0 && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Qty:</Col>
+                      <Col>
+                        <Form.Control
+                          as="select"
+                          value={qty}
+                          onChange={(e) => setQty(e.target.value)}
+                        >
+                          {[...Array(product.countInStock).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                )}
                 <ListGroup.Item>
                   <Button
+                    onClick={addToCartHandler}
                     variant="dark"
                     block
                     disabled={product.countInStock === 0}
