@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Row,
   Col,
@@ -10,12 +10,11 @@ import {
   Button,
   Container,
   Form,
-} from "react-bootstrap"
-import axios from "axios"
-import Rating from "../components/Rating"
-import { listProductDetails } from "../actions/productActions"
-import Message from "../components/Message"
-import Loader from "../components/Loader"
+} from 'react-bootstrap'
+import Rating from '../components/Rating'
+import { listProductDetails } from '../actions/productActions'
+import Message from '../components/Message'
+import Loader from '../components/Loader'
 
 const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = useState(1)
@@ -26,7 +25,7 @@ const ProductScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch(listProductDetails(match.params.id))
-  }, [match])
+  }, [match, dispatch])
 
   const addToCartHandler = () => {
     history.push(`/cart/${match.params.id}?qty=${qty}`)
@@ -74,7 +73,7 @@ const ProductScreen = ({ history, match }) => {
                   <Row>
                     <Col>Status:</Col>
                     <Col>
-                      {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+                      {product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}
                     </Col>
                   </Row>
                 </ListGroup.Item>
